@@ -46,7 +46,7 @@ class OAuthRemoteApp(BaseRemoteApp):
 
     def get_connection(self):
         return _social.datastore.find_connection(provider_id=self.id,
-                                                 user_id=current_user.id)
+                                                 user=current_user._get_current_object())
 
     def get_api(self):
         module = import_module(self.module)

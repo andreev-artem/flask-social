@@ -69,7 +69,7 @@ def remove_all_connections(provider_id):
 
     ctx = dict(provider=provider.name, user=current_user)
 
-    deleted = _datastore.delete_connections(user_id=current_user.get_id(),
+    deleted = _datastore.delete_connections(user=current_user._get_current_object(),
                                             provider_id=provider_id)
     if deleted:
         after_this_request(_commit)
@@ -94,7 +94,7 @@ def remove_connection(provider_id, provider_user_id):
     ctx = dict(provider=provider.name, user=current_user,
                provider_user_id=provider_user_id)
 
-    deleted = _datastore.delete_connection(user_id=current_user.get_id(),
+    deleted = _datastore.delete_connection(user=current_user._get_current_object(),
                                            provider_id=provider_id,
                                            provider_user_id=provider_user_id)
 
@@ -117,7 +117,7 @@ def connect_handler(cv, provider):
     :param connection_values: A dictionary containing the connection values
     :param provider_id: The provider ID the connection shoudl be made to
     """
-    cv.setdefault('user_id', current_user.get_id())
+    cv.setdefault('user', current_user._get_current_object())
     connection = _datastore.find_connection(**cv)
 
     if connection is None:

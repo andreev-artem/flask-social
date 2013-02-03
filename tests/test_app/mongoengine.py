@@ -39,7 +39,7 @@ def create_app(auth_config=None, debug=True):
             return Connection.objects(user_id=str(self.id))
 
     class Connection(db.Document):
-        user_id = db.ObjectIdField()
+        user = db.ReferenceField(User, dbref=True)
         provider_id = db.StringField(max_length=255)
         provider_user_id = db.StringField(max_length=255)
         access_token = db.StringField(max_length=255)
@@ -48,10 +48,6 @@ def create_app(auth_config=None, debug=True):
         profile_url = db.StringField(max_length=512)
         image_url = db.StringField(max_length=512)
         rank = db.IntField(default=1)
-
-        @property
-        def user(self):
-            return User.objects(id=self.user_id).first()
 
     app.security = Security(app, MongoEngineUserDatastore(db, User, Role))
     app.social = Social(app, MongoEngineConnectionDatastore(db, Connection))
